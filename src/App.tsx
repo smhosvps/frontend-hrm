@@ -59,7 +59,7 @@ function App() {
     <HashRouter>
         {/* <Header /> */}
         <Routes>
-          <Route path="*" element={<NotFoundScreen />} />
+      
           <Route element={<IsNotLoginAuth />}>
             <Route path="/" element={<SignInScreen />} />
             <Route path="/forgot-password" element={<ForgotPasswordScreen />} />
@@ -135,6 +135,7 @@ function App() {
               element={<MeetingCreationForm />}
             />
           </Route>
+          <Route path="*" element={<NotFoundScreen />} />
           {/* </Route> */}
         </Routes>
         </HashRouter>

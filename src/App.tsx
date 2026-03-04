@@ -1,4 +1,4 @@
-import { HashRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import NotFoundScreen from "./screens/NotFoundScreen";
@@ -31,6 +31,7 @@ import PaticipantMeetingJoin from "./screens/admin/zoom/PaticipantMeetingJoin";
 import UserMeetings from "./screens/admin/zoom/UserMeetings";
 import UserManagement from "./screens/admin/accounts/UserManagement";
 import AddAccount from "./screens/admin/accounts/AddAccount";
+import UploadUsersCSV from "./screens/admin/accounts/UploadUsersCSV";
 
 
 function App() {
@@ -56,10 +57,10 @@ function App() {
   }
   return (
     <>
-    <HashRouter>
+      <BrowserRouter>
         {/* <Header /> */}
         <Routes>
-      
+
           <Route element={<IsNotLoginAuth />}>
             <Route path="/" element={<SignInScreen />} />
             <Route path="/forgot-password" element={<ForgotPasswordScreen />} />
@@ -106,39 +107,40 @@ function App() {
           <Route element={<AdminRoute allowedRoles={["pastor", "adhoc"]} />}>
             <Route path="/dashboard-adhoc" element={<PastorLayout />}></Route>
           </Route>
-          {/* <Route
+          <Route
             element={
-              <AdminRoute allowedRoles={["Super Admin", "admin", "pastors"]} />
+              <AdminRoute allowedRoles={["Super Admin"]} />
             }
-          > */}
-          <Route path="/dashboard" element={<AdminLayout />}>
-            <Route
-              path="manage-notification"
-              element={<AdminNotificationList />}
-            />
-            <Route
-              path="create-notification"
-              element={<AdminNotificationCreate />}
-            />
-            <Route
-              path="detail-notification/:id"
-              element={<AdminNotificationDetail />}
-            />
-            <Route path="manage-user" element={<UserManagement />} />
-             <Route path="user-details/:id" element={<UserDetails />} />
+          >
+            <Route path="/dashboard" element={<AdminLayout />}>
+              <Route
+                path="manage-notification"
+                element={<AdminNotificationList />}
+              />
+              <Route
+                path="create-notification"
+                element={<AdminNotificationCreate />}
+              />
+              <Route
+                path="detail-notification/:id"
+                element={<AdminNotificationDetail />}
+              />
+              <Route path="manage-user" element={<UserManagement />} />
+              <Route path="user-details/:id" element={<UserDetails />} />
               <Route path="admin-add-account" element={<AddAccount />} />
-            
-            <Route path="manage-schedule" element={<ManageSchedule />} />
-            <Route path="zoom-meetings" element={<AdminMeetingsDashboard />} />
-            <Route
-              path="create-zoom-meetings"
-              element={<MeetingCreationForm />}
-            />
+              <Route path="admin-add-account-csv" element={<UploadUsersCSV />} />
+              <Route path="manage-schedule" element={<ManageSchedule />} />
+              <Route path="zoom-meetings" element={<AdminMeetingsDashboard />} />
+              <Route
+                path="create-zoom-meetings"
+                element={<MeetingCreationForm />}
+              />
+            </Route>
           </Route>
           <Route path="*" element={<NotFoundScreen />} />
-          {/* </Route> */}
+
         </Routes>
-        </HashRouter>
+      </BrowserRouter>
       <ToastContainer
         position="top-center"
         autoClose={5000}

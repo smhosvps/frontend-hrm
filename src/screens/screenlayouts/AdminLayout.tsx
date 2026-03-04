@@ -1,4 +1,6 @@
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { useEffect, useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -6,10 +8,10 @@ import {
   X,
   Settings,
   User,
-  LayoutDashboard,
-  Users,
-  Truck,
-  Package,
+  // LayoutDashboard,
+  // Users,
+  // Truck,
+  // Package,
   BarChart3,
   Shield,
   HelpCircle,
@@ -53,69 +55,69 @@ export default function AdminLayout({ children }: LayoutProps) {
 
   // Wrap menuItems in useMemo to prevent recreation on every render
   const menuItems = useMemo(() => [
-    {
-      id: "overview",
-      label: "Overview",
-      mainSection: "MAIN MENU",
-      icon: LayoutDashboard,
-      section: "overview",
-      link: "/admin/overview",
-      submenu: null,
-    },
-    {
-      id: "management",
-      mainSection: "USER & ROLE MANAGEMENT",
-      label: "Management",
-      icon: Users,
-      submenu: [
-        {
-          label: "Customers",
-          section: "users",
-          link: "/dashboard/manage-customer",
-        },
-        {
-          label: "Delivery Partners",
-          section: "users",
-          link: "/dashboard/manage-partners",
-        },
-        { label: "Admin", section: "roles", link: "/dashboard/manage-admins" },
-        {
-          label: "Super Admin",
-          section: "permissions",
-          link: "/dashboard/manage-super-admins",
-        },
-      ],
-    },
-    {
-      id: "operations",
-      label: "Operations",
-      mainSection: "OPERATION & LOGISTICS",
-      icon: Truck,
-      submenu: [
-        {
-          label: "Deliveries",
-          section: "deliveries",
-          link: "/admin/deliveries",
-        },
-        { label: "Drivers", section: "drivers", link: "/admin/drivers" },
-        { label: "Routes", section: "routes", link: "/admin/routes" },
-      ],
-    },
-    {
-      id: "inventory",
-      label: "Inventory",
-      mainSection: "FINANCE & PAYMENT",
-      icon: Package,
-      submenu: [
-        { label: "Delivery Options", section: "parcels", link: "/dashboard/manage-delivery-options" },
-        {
-          label: "Warehouses",
-          section: "warehouses",
-          link: "/admin/warehouses",
-        },
-        { label: "Stock", section: "stock", link: "/admin/stock" },
-      ],
-    },
+    // {
+    //   id: "overview",
+    //   label: "Overview",
+    //   mainSection: "MAIN MENU",
+    //   icon: LayoutDashboard,
+    //   section: "overview",
+    //   link: "/admin/overview",
+    //   submenu: null,
+    // },
+    // {
+    //   id: "management",
+    //   mainSection: "USER & ROLE MANAGEMENT",
+    //   label: "Management",
+    //   icon: Users,
+    //   submenu: [
+    //     {
+    //       label: "Customers",
+    //       section: "users",
+    //       link: "/dashboard/manage-customer",
+    //     },
+    //     {
+    //       label: "Delivery Partners",
+    //       section: "users",
+    //       link: "/dashboard/manage-partners",
+    //     },
+    //     { label: "Admin", section: "roles", link: "/dashboard/manage-admins" },
+    //     {
+    //       label: "Super Admin",
+    //       section: "permissions",
+    //       link: "/dashboard/manage-super-admins",
+    //     },
+    //   ],
+    // },
+    // {
+    //   id: "operations",
+    //   label: "Operations",
+    //   mainSection: "OPERATION & LOGISTICS",
+    //   icon: Truck,
+    //   submenu: [
+    //     {
+    //       label: "Deliveries",
+    //       section: "deliveries",
+    //       link: "/admin/deliveries",
+    //     },
+    //     { label: "Drivers", section: "drivers", link: "/admin/drivers" },
+    //     { label: "Routes", section: "routes", link: "/admin/routes" },
+    //   ],
+    // },
+    // {
+    //   id: "inventory",
+    //   label: "Inventory",
+    //   mainSection: "FINANCE & PAYMENT",
+    //   icon: Package,
+    //   submenu: [
+    //     { label: "Delivery Options", section: "parcels", link: "/dashboard/manage-delivery-options" },
+    //     {
+    //       label: "Warehouses",
+    //       section: "warehouses",
+    //       link: "/admin/warehouses",
+    //     },
+    //     { label: "Stock", section: "stock", link: "/admin/stock" },
+    //   ],
+    // },
     {
       id: "users",
       label: "User Management",
@@ -128,7 +130,7 @@ export default function AdminLayout({ children }: LayoutProps) {
     {
       id: "notifications",
       label: "Notifications",
-      mainSection: "POLICIES",
+      mainSection: "NOTIFICATION",
       icon: BarChart3,
       section: "notifications",
       link: "/dashboard/manage-notification",
@@ -137,7 +139,7 @@ export default function AdminLayout({ children }: LayoutProps) {
     {
       id: "schedule",
       label: "Schedule",
-      mainSection: "POLICIES",
+      mainSection: "SCHEDULE",
       icon: Calendar,
       section: "schedules",
       link: "/dashboard/manage-schedule",
@@ -209,7 +211,7 @@ export default function AdminLayout({ children }: LayoutProps) {
     // Find which menu item contains this path and expand it
     for (const item of menuItems) {
       if (item.submenu) {
-        const foundSubItem = item.submenu.find((sub) => sub.link === path);
+        const foundSubItem = item.submenu.find((sub:any) => sub.link === path);
         if (foundSubItem) {
           setExpandedMenu(item.id);
           setActiveSection(foundSubItem.section);
@@ -255,7 +257,7 @@ export default function AdminLayout({ children }: LayoutProps) {
         }
         if (item.submenu) {
           const subItem = item.submenu.find(
-            (sub) => sub.link === location.pathname
+            (sub:any) => sub.link === location.pathname
           );
           if (subItem) {
             return `${item.mainSection} / ${item.label} / ${subItem.label}`;

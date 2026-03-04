@@ -93,18 +93,19 @@ export const userApi = api.injectEndpoints({
       query: (id) => `admin-manage-users/users/${id}`,
     }),
 
+    uploadUsersCSV: builder.mutation({
+      query: (formData) => ({
+        url: 'upload-users-csv',
+        method: 'POST',
+        body: formData,
+      }),
+    }),
+
     updateUserFcm: builder.mutation({
       query: ({ id, ...data }) => ({
         url: `admin-manage-users/users-edit/${id}`,
         method: "PUT",
         body: data,
-      }),
-    }),
-
-    deleteUserFcm: builder.mutation({
-      query: (id) => ({
-        url: `admin-manage-users/users-delete/${id}`,
-        method: "DELETE",
       }),
     }),
 
@@ -137,12 +138,6 @@ export const userApi = api.injectEndpoints({
       }),
     }),
 
-    deleteUser: builder.mutation({
-      query: (id) => ({
-        url: `delete-user/${id}`,
-        method: "DELETE",
-      }),
-    }),
 
     getDetailUser: builder.query({
       query: (id) => `single-user/${id}`,
@@ -399,6 +394,14 @@ export const userApi = api.injectEndpoints({
         method: "PUT",
       }),
     }),
+
+
+    deleteUser: builder.mutation({
+      query: (userId) => ({
+        url: `delete-user/${userId}`,
+        method: 'DELETE',
+      }),
+    }),
   }),
 });
 
@@ -448,11 +451,11 @@ export const {
   useGetAllUsersFcmQuery,
   useGetUserDetailsFcmQuery,
   useUpdateUserFcmMutation,
-  useDeleteUserFcmMutation,
   useUpgradeUserTypeMutation,
   useRestoreUserFcmMutation,
 
   // newests
   useUpdateProfileMutation,
   useChangePasswordMutation,
+  useUploadUsersCSVMutation
 } = userApi;

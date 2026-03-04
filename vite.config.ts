@@ -22,5 +22,6 @@ export default defineConfig({
   build: {
     sourcemap: false,
   },
-  base: '/frontend-hrm',
+  // base: '/frontend-hrm',
+  base: "/"
 })

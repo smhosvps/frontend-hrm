@@ -41,7 +41,20 @@ export const zoomApi = api.injectEndpoints({
     acknowledgeMeeting: builder.mutation({
       query: (receiptId) => ({
         url: `acknowledge-meeting/${receiptId}/acknowledge`,
-        method: "PATCH",
+        method: "PUT",
+      }),
+    }),
+    getMeetingAttendance: builder.query({
+      query: (meetingId) => ({
+        url: `meeting-attendance/${meetingId}`,
+        method: "GET",
+      }),
+    }),
+
+    getMeetingAttendanceStats: builder.query({
+      query: (meetingId) => ({
+        url: `meeting-attendance/${meetingId}/stats`,
+        method: "GET",
       }),
     }),
   }),
@@ -55,4 +68,6 @@ export const {
   useUpdateMeetingMutation,
     useGetUserMeetingsQuery,
   useAcknowledgeMeetingMutation,
+  useGetMeetingAttendanceQuery,
+  useGetMeetingAttendanceStatsQuery,
 } = zoomApi;

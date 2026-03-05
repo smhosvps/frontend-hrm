@@ -484,14 +484,14 @@ export default function SignInScreen() {
                   </div>
 
                   {/* Register New User Link */}
-                  <div className="text-center border-t border-blue-100 pt-4">
+                  {/* <div className="text-center border-t border-blue-100 pt-4">
                     <Link
                       to="/register"
                       className="inline-flex items-center justify-center gap-2 text-blue-600 hover:text-blue-700 font-semibold hover:underline transition-colors group"
                     >
                       Register New User
                     </Link>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

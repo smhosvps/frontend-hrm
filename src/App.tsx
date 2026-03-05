@@ -32,6 +32,7 @@ import UserMeetings from "./screens/admin/zoom/UserMeetings";
 import UserManagement from "./screens/admin/accounts/UserManagement";
 import AddAccount from "./screens/admin/accounts/AddAccount";
 import UploadUsersCSV from "./screens/admin/accounts/UploadUsersCSV";
+import ZoomAttendancePage from "./screens/admin/zoom/ZoomAttendancePage";
 
 
 function App() {
@@ -109,7 +110,7 @@ function App() {
           </Route>
           <Route
             element={
-              <AdminRoute allowedRoles={["Super Admin"]} />
+              <AdminRoute allowedRoles={["Super Admin", "pastor"]} />
             }
           >
             <Route path="/dashboard" element={<AdminLayout />}>
@@ -131,6 +132,7 @@ function App() {
               <Route path="admin-add-account-csv" element={<UploadUsersCSV />} />
               <Route path="manage-schedule" element={<ManageSchedule />} />
               <Route path="zoom-meetings" element={<AdminMeetingsDashboard />} />
+              <Route path="zoom-attendance/:id" element={<ZoomAttendancePage />} />
               <Route
                 path="create-zoom-meetings"
                 element={<MeetingCreationForm />}

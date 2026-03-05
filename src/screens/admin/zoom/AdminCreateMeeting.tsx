@@ -8,10 +8,12 @@ import {
   useDeleteMeetingMutation,
   useGetAdminMeetingsQuery,
 } from "@/redux/features/zoomApi/zoomApi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { Users } from "lucide-react";
 
 const AdminMeetingsDashboard = () => {
+  const navigate = useNavigate();
   const {
     data: meetingsData,
     isLoading,
@@ -20,6 +22,7 @@ const AdminMeetingsDashboard = () => {
   const [deleteMeeting] = useDeleteMeetingMutation();
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
+  console.log(meetingsData, "meetung data")
 
   const handleDeleteMeeting = async (meetingId: string) => {
     if (window.confirm("Are you sure you want to delete this meeting?")) {
@@ -34,6 +37,10 @@ const AdminMeetingsDashboard = () => {
 
   const handleStartMeeting = (startUrl: string) => {
     window.open(startUrl, "_blank");
+  };
+
+  const handleViewAttendance = (meetingId: string) => {
+    navigate(`/dashboard/zoom-attendance/${meetingId}`);
   };
 
   const copyToClipboard = async (text: string, field: string) => {
@@ -107,7 +114,7 @@ const AdminMeetingsDashboard = () => {
     <div className="min-h-screen p-0 md:p-6">
       <div className="">
         <CardHeader className="px-0 pt-0">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
             <div className="mb-4 md:mb-0">
               <CardTitle className="text-2xl md:text-3xl font-bold text-gray-900">
                 Meeting Management
@@ -118,7 +125,7 @@ const AdminMeetingsDashboard = () => {
             </div>
 
             <Link to="/dashboard/create-zoom-meetings">
-              <button className="px-4 md:px-6 py-2 md:py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-[10px] transition-all duration-200 transform hover:scale-105 shadow-md">
+              <button className="px-4 md:px-6 py-2 md:py-3 bg-blue-600 w-full hover:bg-blue-700 text-white font-semibold rounded-[10px] transition-all duration-200 transform hover:scale-105 shadow-md">
                 + Create New Meeting
               </button>
             </Link>
@@ -287,7 +294,7 @@ const AdminMeetingsDashboard = () => {
                       <button
                         onClick={() => handleStartMeeting(meeting.startUrl)}
                         disabled={currentStatus === 'ended' || currentStatus === 'cancelled'}
-                        className="bg-green-600 hover:bg-green-700 disabled:bg-gray-300 text-white py-2.5 px-4 rounded-lg font-semibold text-sm transition-colors flex items-center justify-center gap-2"
+                        className="bg-green-600 hover:bg-green-700 disabled:bg-gray-300 text-white py-2.5 px-4 rounded-[10px] font-semibold text-sm transition-colors flex items-center justify-center gap-2"
                       >
                         <span>🎥</span>
                         Start Meeting
@@ -295,7 +302,7 @@ const AdminMeetingsDashboard = () => {
 
                       <button
                         onClick={() => copyToClipboard(meeting.joinUrl, `joinUrl-${meeting._id}`)}
-                        className="bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-4 rounded-lg font-semibold text-sm transition-colors flex items-center justify-center gap-2"
+                        className="bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-4 rounded-[10px] font-semibold text-sm transition-colors flex items-center justify-center gap-2"
                       >
                         {copiedField === `joinUrl-${meeting._id}` ? (
                           <>
@@ -311,31 +318,42 @@ const AdminMeetingsDashboard = () => {
                       </button>
                     </div>
 
-                    {/* Secondary Actions */}
-                    <div className="grid grid-cols-2 gap-3">
+                    {/* Secondary Actions - Updated to include View Attendance */}
+                    <div className="grid grid-cols-3 gap-2">
                       <button
                         onClick={() => copyToClipboard(meeting.zoomMeetingId, `zoomId-full-${meeting._id}`)}
-                        className="border border-blue-600 text-blue-600 hover:bg-blue-50 py-2.5 px-4 rounded-lg font-semibold text-sm transition-colors flex items-center justify-center gap-2"
+                        className="border border-blue-600 text-blue-600 hover:bg-blue-50 py-2.5 px-2 rounded-[10px] font-semibold text-xs transition-colors flex items-center justify-center gap-1"
+                        title="Copy Meeting ID"
                       >
                         {copiedField === `zoomId-full-${meeting._id}` ? (
                           <>
                             <span>✅</span>
-                            ID Copied
+                            <span className="hidden sm:inline">ID</span>
                           </>
                         ) : (
                           <>
                             <span>📋</span>
-                            Copy ID Only
+                            <span className="hidden sm:inline">ID</span>
                           </>
                         )}
                       </button>
 
                       <button
+                        onClick={() => handleViewAttendance(meeting._id)}
+                        className="border border-purple-600 text-purple-600 hover:bg-purple-50 py-2.5 px-2 rounded-[10px] font-semibold text-xs transition-colors flex items-center justify-center gap-1"
+                        title="View Attendance"
+                      >
+                        <Users className="w-4 h-4" />
+                        <span className="hidden sm:inline">Attendance</span>
+                      </button>
+
+                      <button
                         onClick={() => handleDeleteMeeting(meeting._id)}
-                        className="border border-red-600 text-red-600 hover:bg-red-50 py-2.5 px-4 rounded-lg font-semibold text-sm transition-colors flex items-center justify-center gap-2"
+                        className="border border-red-600 text-red-600 hover:bg-red-50 py-2.5 px-2 rounded-[10px] font-semibold text-xs transition-colors flex items-center justify-center gap-1"
+                        title="Delete Meeting"
                       >
                         <span>🗑️</span>
-                        Delete
+                        <span className="hidden sm:inline">Delete</span>
                       </button>
                     </div>
 
@@ -351,8 +369,6 @@ const AdminMeetingsDashboard = () => {
             })}
           </div>
         )}
-
-   
       </div>
     </div>
   );

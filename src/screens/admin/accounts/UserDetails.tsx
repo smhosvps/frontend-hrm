@@ -167,7 +167,7 @@ export default function UserDetails() {
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Profile Card */}
-          <Card className={`${activeTab === "personal" || window.innerWidth >= 1024 ? "block" : "hidden"} lg:block lg:col-span-1 border-blue-100`}>
+          <Card className={`${activeTab === "personal" || window.innerWidth >= 1024 ? "block" : "hidden"} lg:block lg:col-span-1 border-blue-100 bg-white`}>
             <CardHeader className="pb-2 border-b border-blue-100 p-4 sm:p-6">
               <CardTitle className="text-lg flex items-center gap-2">
                 <User className="h-5 w-5 text-blue-600" />
@@ -262,7 +262,7 @@ export default function UserDetails() {
           </Card>
 
           {/* Personal Information Card */}
-          <Card className={`${activeTab === "personal" || window.innerWidth >= 1024 ? "block" : "hidden"} lg:block lg:col-span-2 border-blue-100`}>
+          <Card className={`${activeTab === "personal" || window.innerWidth >= 1024 ? "block" : "hidden"} lg:block lg:col-span-2 border-blue-100 bg-white`}>
             <CardHeader className="pb-2 border-b border-blue-100 p-4 sm:p-6">
               <CardTitle className="text-lg flex items-center gap-2">
                 <Shield className="h-5 w-5 text-blue-600" />
@@ -288,7 +288,7 @@ export default function UserDetails() {
           </Card>
 
           {/* Work Information Card */}
-          <Card className={`${activeTab === "work" || window.innerWidth >= 1024 ? "block" : "hidden"} lg:block lg:col-span-3 border-blue-100`}>
+          <Card className={`${activeTab === "work" || window.innerWidth >= 1024 ? "block" : "hidden"} lg:block lg:col-span-3 border-blue-100 bg-white`}>
             <CardHeader className="pb-2 border-b border-blue-100 p-4 sm:p-6">
               <CardTitle className="text-lg flex items-center gap-2">
                 <Briefcase className="h-5 w-5 text-blue-600" />
@@ -308,7 +308,7 @@ export default function UserDetails() {
           </Card>
 
           {/* Location & Address Card */}
-          <Card className={`${activeTab === "location" || window.innerWidth >= 1024 ? "block" : "hidden"} lg:block lg:col-span-3 border-blue-100`}>
+          <Card className={`${activeTab === "location" || window.innerWidth >= 1024 ? "block" : "hidden"} lg:block lg:col-span-3 border-blue-100 bg-white`}>
             <CardHeader className="pb-2 border-b border-blue-100 p-4 sm:p-6">
               <CardTitle className="text-lg flex items-center gap-2">
                 <MapPin className="h-5 w-5 text-blue-600" />
@@ -325,7 +325,7 @@ export default function UserDetails() {
           </Card>
 
           {/* Account Statistics Card */}
-          <Card className="lg:col-span-3 border-blue-100">
+          <Card className="lg:col-span-3 border-blue-100 bg-white">
             <CardHeader className="pb-2 border-b border-blue-100 p-4 sm:p-6">
               <CardTitle className="text-lg flex items-center gap-2">
                 <FileText className="h-5 w-5 text-blue-600" />

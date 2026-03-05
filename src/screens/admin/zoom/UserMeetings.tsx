@@ -1,19 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   useGetUserMeetingsQuery,
+  useAcknowledgeMeetingMutation,
 } from "@/redux/features/zoomApi/zoomApi";
-import { Loader2, Video, X } from "lucide-react";
+import { Loader2, Video, X, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useGetAllUsersQuery } from "@/redux/features/user/userApi";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FiUsers } from "react-icons/fi";
+import { toast } from "react-toastify";
 
 export default function UserMeetings() {
-  const { data, isLoading, error } = useGetUserMeetingsQuery({});
+  const { data, isLoading, error, refetch } = useGetUserMeetingsQuery({});
   const { data: allUsers } = useGetAllUsersQuery({});
   const [selectedMeeting, setSelectedMeeting] = useState<any>(null);
+  const [selectedReceiptId, setSelectedReceiptId] = useState<string | null>(null);
   const [showEmbeddedZoom, setShowEmbeddedZoom] = useState(false);
   const [zoomIframeLoaded, setZoomIframeLoaded] = useState(false);
+  const [copiedPasswordId, setCopiedPasswordId] = useState<string | null>(null);
+  const [acknowledge] = useAcknowledgeMeetingMutation();
 
   // Build a map of userId -> full name for quick lookup
   const usersList = allUsers?.users || [];
@@ -23,6 +28,41 @@ export default function UserMeetings() {
       `${user.firstName} ${user.lastName}`,
     ])
   );
+
+  const handleAcknowledge = async (receiptId: string) => {
+    try {
+      await acknowledge(receiptId).unwrap();
+      toast.success("Meeting attendance marked successfully");
+      refetch();
+    } catch (err: any) {
+      console.log(err);
+      toast.error(err?.data?.message || "Failed to mark attendance");
+    }
+  };
+
+  const copyToClipboard = async (text: string, id: string, type: 'password' | 'unique') => {
+    try {
+      await navigator.clipboard.writeText(text);
+      if (type === 'password') {
+        setCopiedPasswordId(id);
+        setTimeout(() => setCopiedPasswordId(null), 2000);
+      }
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  };
+
+  // Find the receipt ID for the selected meeting
+  useEffect(() => {
+    if (selectedMeeting && data?.meetings) {
+      const receipt = data.meetings.find(
+        (item: any) => item.meeting._id === selectedMeeting._id
+      );
+      if (receipt) {
+        setSelectedReceiptId(receipt._id);
+      }
+    }
+  }, [selectedMeeting, data]);
 
   if (isLoading) {
     return (
@@ -46,6 +86,9 @@ export default function UserMeetings() {
   const EmbeddedZoomMeeting = () => {
     if (!selectedMeeting) return null;
 
+    console.log(selectedMeeting, "select meeting")
+    console.log(selectedReceiptId, "receipt id")
+
     const getEmbeddedZoomUrl = () => {
       if (!selectedMeeting?.joinUrl) return "";
       try {
@@ -61,7 +104,16 @@ export default function UserMeetings() {
     const handleClose = () => {
       setShowEmbeddedZoom(false);
       setSelectedMeeting(null);
+      setSelectedReceiptId(null);
       setZoomIframeLoaded(false);
+    };
+
+    const handleMarkAttendance = async () => {
+      if (selectedReceiptId) {
+        await handleAcknowledge(selectedReceiptId);
+      } else {
+        toast.error("Receipt ID not found");
+      }
     };
 
     return (
@@ -106,13 +158,32 @@ export default function UserMeetings() {
               allowFullScreen
             />
           </div>
+
+          {/* Attendance Footer */}
+          <div className="p-4 border-t border-gray-200 bg-gray-50 rounded-b-2xl">
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-gray-600">
+                Mark your attendance after joining the meeting
+              </p>
+              <Button
+                onClick={handleMarkAttendance}
+                className="bg-green-600 hover:bg-green-700 text-white rounded-[6px]"
+                size="sm"
+                disabled={!selectedReceiptId}
+              >
+                <Check className="w-4 h-4 mr-2" />
+                Mark Attendance
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     );
   };
 
-  const handleJoinMeeting = (meeting: any) => {
+  const handleJoinMeeting = (meeting: any, receiptId: string) => {
     setSelectedMeeting(meeting);
+    setSelectedReceiptId(receiptId);
     setShowEmbeddedZoom(true);
   };
 
@@ -145,17 +216,29 @@ export default function UserMeetings() {
               const hostId = item.meeting.host?._id;
               const hostName: any = hostId ? hostMap.get(hostId) : null;
               const meetingPast = isMeetingPast(item.meeting.startTime, item.meeting.duration);
+              const isAcknowledged = item.status === 'read';
+
               return (
                 <div
                   key={item._id}
-                  className="bg-white rounded-lg sm:rounded-xl border border-gray-200 p-3 sm:p-5 shadow-sm hover:shadow-md transition-shadow"
+                  className={`bg-white rounded-lg sm:rounded-xl border p-3 sm:p-5 shadow-sm hover:shadow-md transition-shadow ${
+                    isAcknowledged ? 'border-green-200 bg-green-50/30' : 'border-gray-200'
+                  }`}
                 >
                   <div className="flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-4">
                     {/* Meeting Info */}
                     <div className="flex-1 w-full">
-                      <h3 className="text-base sm:text-lg font-semibold text-gray-800 break-words">
-                        {item.meeting.topic}
-                      </h3>
+                      <div className="flex items-center gap-2 mb-2">
+                        <h3 className="text-base sm:text-lg font-semibold text-gray-800 break-words uppercase">
+                          {item.meeting.topic}
+                        </h3>
+                        {isAcknowledged && (
+                          <span className="inline-flex items-center px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
+                            <Check className="w-3 h-3 mr-1" />
+                            Attended
+                          </span>
+                        )}
+                      </div>
                       <p className="text-sm sm:text-base text-gray-600 mt-1 break-words">
                         {item.meeting.description}
                       </p>
@@ -176,13 +259,34 @@ export default function UserMeetings() {
                       <p className="text-xs text-gray-400 mt-2">
                         Received: {new Date(item.receivedAt).toLocaleString()}
                       </p>
+
+                      {/* Meeting Password with Copy Button */}
+                      <div className="mt-3 flex items-center gap-2">
+                        <div className="font-bold text-blue-800">
+                          Password: {item.meeting.meetingPassword}
+                        </div>
+                        <button
+                          onClick={() => copyToClipboard(item.meeting.meetingPassword, item._id, 'password')}
+                          className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+                          title="Copy password"
+                        >
+                          {copiedPasswordId === item._id ? (
+                            <Check className="w-3 h-3 text-green-600" />
+                          ) : (
+                            <Copy className="w-3 h-3" />
+                          )}
+                          <span>{copiedPasswordId === item._id ? 'Copied!' : 'Copy'}</span>
+                        </button>
+                      </div>
+
+                      <p className="text-xs mt-3 text-gray-500">To join the meeting, please copy the meeting password and replace Meeting Passcode.</p>
                     </div>
 
                     {/* Action Button */}
                     <div className="flex items-center justify-end w-full sm:w-auto">
-                      {!meetingPast && (
+                      {!meetingPast && !isAcknowledged && (
                         <Button
-                          onClick={() => handleJoinMeeting(item.meeting)}
+                          onClick={() => handleJoinMeeting(item.meeting, item._id)}
                           variant="outline"
                           size="sm"
                           className="w-full sm:w-auto rounded-[6px] border border-blue-600 hover:border-blue-700 text-blue-600 hover:text-blue-700 text-xs sm:text-sm py-1.5 sm:py-2"
@@ -190,6 +294,11 @@ export default function UserMeetings() {
                           <Video className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                           Join
                         </Button>
+                      )}
+                      {isAcknowledged && (
+                        <span className="text-sm text-green-600 font-medium">
+                          ✓ Attendance Marked
+                        </span>
                       )}
                     </div>
                   </div>

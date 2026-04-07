@@ -3,8 +3,8 @@ import { RootState } from "../store/store";
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8900/api/v1/",  
-    // baseUrl: "https://hrmapi.smhosapps.org/api/v1/", 
+    // baseUrl: "http://localhost:8900/api/v1/",  
+    baseUrl: "https://hrmapi.smhosapps.org/api/v1/", 
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token;
       if (token) {

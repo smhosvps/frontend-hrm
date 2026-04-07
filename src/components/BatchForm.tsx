@@ -1,9 +1,10 @@
-'use client';
+
 
 import { PostingBatch, useGetBatchQuery, useUpdateBatchMutation } from '@/redux/features/securityPostingApi/securityPostingApi';
 import { useState, useEffect } from 'react';
 
-export function BatchForm() {
+
+export default function BatchForm() {
   const { data: batch, isLoading, refetch } = useGetBatchQuery();
   const [updateBatch, { isLoading: isUpdating }] = useUpdateBatchMutation();
   const [formData, setFormData] = useState<Partial<PostingBatch>>({

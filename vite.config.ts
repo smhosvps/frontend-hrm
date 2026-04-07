@@ -21,6 +21,7 @@ export default defineConfig({
   },
   build: {
     sourcemap: false,
+    chunkSizeWarningLimit: 1200,
   },
   // base: '/frontend-hrm',
   base: "/"

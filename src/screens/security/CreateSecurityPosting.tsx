@@ -4,7 +4,8 @@ import { usePostings, Posting } from '@/hooks/use-postings';
 import { Trash2, Edit2, Plus } from 'lucide-react';
 import { PostingTable } from '@/components/PostingTable';
 import { PostingForm } from '@/components/PostingForm';
-import { BatchForm } from '@/components/BatchForm';
+import BatchForm from '@/components/BatchForm';
+
 
 export default function CreateSecurityPosting() {
   const { postings, addPosting, updatePosting, deletePosting } = usePostings();

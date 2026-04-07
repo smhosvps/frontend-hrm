@@ -33,7 +33,14 @@ import UserManagement from "./screens/admin/accounts/UserManagement";
 import AddAccount from "./screens/admin/accounts/AddAccount";
 import UploadUsersCSV from "./screens/admin/accounts/UploadUsersCSV";
 import ZoomAttendancePage from "./screens/admin/zoom/ZoomAttendancePage";
-
+import CreateSecurityPosting from "./screens/security/CreateSecurityPosting";
+import OperativesLayout from "./screens/screenlayouts/OperativesLayout";
+import SecurityPostingTable from "./screens/SecurityPostingTable";
+import { QueryManager } from "./components/QueryManager";
+import MyQueriesPage from "./screens/MyQueriesPage";
+import AdminStaffLayout from "./screens/screenlayouts/AdminStaffLayout";
+import AdhocStaffLayout from "./screens/screenlayouts/AdhocStaffLayout";
+import AdminSecPosting from "./screens/screenlayouts/AdminSecPosting";
 
 function App() {
   const dispatch = useDispatch();
@@ -61,7 +68,6 @@ function App() {
       <BrowserRouter>
         {/* <Header /> */}
         <Routes>
-
           <Route element={<IsNotLoginAuth />}>
             <Route path="/" element={<SignInScreen />} />
             <Route path="/forgot-password" element={<ForgotPasswordScreen />} />
@@ -81,39 +87,71 @@ function App() {
               <Route path="events" element={<UserSchedules />} />
               <Route path="profile" element={<UserProfileSettings />} />
               <Route path="meeting-list" element={<UserMeetings />} />
+              <Route path="queries" element={<MyQueriesPage />} />
               <Route
                 path="meeting/:meetingId"
                 element={<PaticipantMeetingJoin />}
               />
             </Route>
           </Route>
+
           <Route
             element={<AdminRoute allowedRoles={["pastor", "admin staff"]} />}
           >
-            <Route
-              path="/dashboard-hr-admin"
-              element={<PastorLayout />}
-            ></Route>
+            <Route path="/dashboard-hr-admin" element={<AdminStaffLayout />}>
+              <Route index element={<PastorHomePage />} />
+              <Route path="notifications" element={<UserNotificationList />} />
+              <Route path="events" element={<UserSchedules />} />
+              <Route path="profile" element={<UserProfileSettings />} />
+              <Route path="meeting-list" element={<UserMeetings />} />
+              <Route path="queries" element={<MyQueriesPage />} />
+              <Route
+                path="meeting/:meetingId"
+                element={<PaticipantMeetingJoin />}
+              />
+            </Route>
           </Route>
+
           {/* operative */}
           <Route
             element={<AdminRoute allowedRoles={["pastor", "operatives"]} />}
           >
-            <Route
-              path="/dashboard-operatives"
-              element={<PastorLayout />}
-            ></Route>
+            <Route path="/dashboard-operatives" element={<OperativesLayout />}>
+              <Route index element={<PastorHomePage />} />
+              <Route path="notifications" element={<UserNotificationList />} />
+              <Route path="events" element={<UserSchedules />} />
+              <Route path="profile" element={<UserProfileSettings />} />
+              <Route path="meeting-list" element={<UserMeetings />} />
+              <Route path="posting" element={<SecurityPostingTable />} />
+              <Route path="queries" element={<MyQueriesPage />} />
+              <Route
+                path="meeting/:meetingId"
+                element={<PaticipantMeetingJoin />}
+              />
+            </Route>
           </Route>
+
           {/* adhoc */}
           <Route element={<AdminRoute allowedRoles={["pastor", "adhoc"]} />}>
-            <Route path="/dashboard-adhoc" element={<PastorLayout />}></Route>
+            <Route path="/dashboard-adhoc" element={<AdhocStaffLayout />}>
+              <Route index element={<PastorHomePage />} />
+              <Route path="notifications" element={<UserNotificationList />} />
+              <Route path="events" element={<UserSchedules />} />
+              <Route path="profile" element={<UserProfileSettings />} />
+              <Route path="meeting-list" element={<UserMeetings />} />
+              <Route path="queries" element={<MyQueriesPage />} />
+              <Route
+                path="meeting/:meetingId"
+                element={<PaticipantMeetingJoin />}
+              />
+            </Route>
           </Route>
+
           <Route
-            element={
-              <AdminRoute allowedRoles={["Super Admin", "pastor"]} />
-            }
+            element={<AdminRoute allowedRoles={["Super Admin", "pastor"]} />}
           >
             <Route path="/dashboard" element={<AdminLayout />}>
+              <Route index element={<UserManagement />} />
               <Route
                 path="manage-notification"
                 element={<AdminNotificationList />}
@@ -122,6 +160,7 @@ function App() {
                 path="create-notification"
                 element={<AdminNotificationCreate />}
               />
+              <Route path="profile" element={<UserProfileSettings />} />
               <Route
                 path="detail-notification/:id"
                 element={<AdminNotificationDetail />}
@@ -129,18 +168,38 @@ function App() {
               <Route path="manage-user" element={<UserManagement />} />
               <Route path="user-details/:id" element={<UserDetails />} />
               <Route path="admin-add-account" element={<AddAccount />} />
-              <Route path="admin-add-account-csv" element={<UploadUsersCSV />} />
+              <Route
+                path="admin-add-account-csv"
+                element={<UploadUsersCSV />}
+              />
               <Route path="manage-schedule" element={<ManageSchedule />} />
-              <Route path="zoom-meetings" element={<AdminMeetingsDashboard />} />
-              <Route path="zoom-attendance/:id" element={<ZoomAttendancePage />} />
+              <Route
+                path="zoom-meetings"
+                element={<AdminMeetingsDashboard />}
+              />
+              <Route path="manage-queries" element={<QueryManager />} />
+              <Route
+                path="zoom-attendance/:id"
+                element={<ZoomAttendancePage />}
+              />
               <Route
                 path="create-zoom-meetings"
                 element={<MeetingCreationForm />}
               />
             </Route>
           </Route>
-          <Route path="*" element={<NotFoundScreen />} />
 
+          <Route
+            element={
+              <AdminRoute allowedRoles={["operative admin", "pastor"]} />
+            }
+          >
+            <Route path="/dashboard-admin-posting" element={<AdminSecPosting />}>
+              <Route index element={<CreateSecurityPosting />} />
+                 <Route path="profile" element={<UserProfileSettings />} />
+            </Route>
+          </Route>
+          <Route path="*" element={<NotFoundScreen />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer

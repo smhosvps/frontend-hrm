@@ -77,16 +77,16 @@ export default function AdhocStaffLayout({ children }: LayoutProps) {
   }, []);
 
   const navItems = [
-    { icon: HomeIcon, label: "Home", href: "/dashboard" },
-    { icon: Calendar, label: "Events", href: "/dashboard/manage-schedule" },
-    { icon: UserCircle, label: "Meetings", href: "/dashboard/zoom-meetings" },
-    { icon: BellDot, label: "Notifications", href: "/dashboard/manage-notification" },
+    { icon: HomeIcon, label: "Home", href: "/dashboard-adhoc" },
+    { icon: Calendar, label: "Events", href: "/dashboard-adhoc/events" },
+    { icon: UserCircle, label: "Meetings", href: "/dashboard-adhoc/meeting-list" },
+    { icon: BellDot, label: "Notifications", href: "/dashboard-adhoc/notifications" },
         {
           icon: FileQuestion,
           label: "Queries",
-          href: "/dashboard/manage-queries",
+          href: "/dashboard-adhoc/queries",
         },
-    { icon: UserRound, label: "My Profile", href: "/dashboard/profile" },
+    { icon: UserRound, label: "My Profile", href: "/dashboard-adhoc/profile" },
   ];
 
   const handleLogout = async () => {
@@ -142,7 +142,7 @@ export default function AdhocStaffLayout({ children }: LayoutProps) {
       {/* Sidebar Header */}
       <div className={`flex items-center h-16 px-4 border-b border-gray-200/50 ${sidebarCollapsed ? "justify-center" : "justify-between"}`}>
         {!sidebarCollapsed && (
-          <Link to="/dashboard" className="flex items-center gap-2">
+          <Link to="/dashboard-adhoc" className="flex items-center gap-2">
             <LayoutDashboard className="h-6 w-6 text-blue-600" />
             <span className="font-bold text-lg bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
               SMHOS HRM
@@ -222,7 +222,7 @@ export default function AdhocStaffLayout({ children }: LayoutProps) {
               <div className="flex justify-center">
                 <Avatar
                   className="h-10 w-10 cursor-pointer ring-2 ring-white shadow-lg hover:ring-blue-200 transition-all"
-                  onClick={() => navigate("/dashboard/profile")}
+                  onClick={() => navigate("/dashboard-adhoc/profile")}
                 >
                   <AvatarImage src={user?.user?.avatar?.url} alt="Profile" />
                   <AvatarFallback className="bg-gradient-to-br from-blue-600 to-blue-700 text-white">
@@ -238,7 +238,7 @@ export default function AdhocStaffLayout({ children }: LayoutProps) {
         ) : (
           <div
             className="flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-gray-50 transition-all"
-            onClick={() => navigate("/dashboard/profile")}
+            onClick={() => navigate("/dashboard-adhoc/profile")}
           >
             <Avatar className="h-10 w-10 ring-2 ring-white shadow-lg">
               <AvatarImage src={user?.user?.avatar?.url} alt="Profile" />
@@ -276,7 +276,7 @@ export default function AdhocStaffLayout({ children }: LayoutProps) {
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b">
-            <Link to="/dashboard" className="flex items-center gap-2">
+            <Link to="/dashboard-adhoc" className="flex items-center gap-2">
               <LayoutDashboard className="h-6 w-6 text-blue-600" />
               <span className="font-bold text-lg bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
                 SMHOS HRM
@@ -409,7 +409,7 @@ export default function AdhocStaffLayout({ children }: LayoutProps) {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-48 bg-white">
-                    <Link to="/dashboard/profile">
+                    <Link to="/dashboard-adhoc/profile">
                       <DropdownMenuItem className="cursor-pointer">
                         <User className="mr-2 h-4 w-4" />
                         <span>Profile</span>

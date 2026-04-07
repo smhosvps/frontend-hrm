@@ -35,19 +35,17 @@ export default function WelcomeDashboard() {
   const [greeting, setGreeting] = useState("");
 
   useEffect(() => {
-    // Set greeting based on time of day
     const hour = new Date().getHours();
     if (hour < 12) setGreeting("Good Morning");
     else if (hour < 17) setGreeting("Good Afternoon");
     else setGreeting("Good Evening");
 
-    // Update time every minute
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 60000);
 
     return () => clearInterval(timer);
-  }, [user]);
+  }, []);
 
   if (!user?.user) return null;
 
@@ -59,10 +57,29 @@ export default function WelcomeDashboard() {
     year: "numeric",
   });
 
+  // Role-based profile route mapping
+  const getProfileRoute = (role: string): string => {
+    switch (role?.toLowerCase()) {
+      case "pastor":
+        return "/pastors-dashboard/profile";
+      case "super admin":
+        return "/super-admin-dashboard/profile";
+      case "admin staff":
+        return "/dashboard-hr-admin/profile";
+      case "operatives":
+        return "/dashboard-operatives/profile";
+      case "adhoc":
+        return "/dashboard-adhoc/profile";
+      default:
+        return "/profile";
+    }
+  };
+
+  const profileRoute = getProfileRoute(userData.role);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-sky-50">
+    <div className="min-h-screen ">
       {/* Animated Background Elements */}
-      {/* Define animations early */}
       <style>{`
         @keyframes wave {
           0% { transform: rotate(0deg); }
@@ -79,7 +96,6 @@ export default function WelcomeDashboard() {
           transform-origin: 70% 70%;
           display: inline-block;
         }
-        /* Optional: define float animation for church icons if missing */
         @keyframes float {
           0%, 100% { transform: translateY(0px); }
           50% { transform: translateY(-20px); }
@@ -96,7 +112,7 @@ export default function WelcomeDashboard() {
 
       <div className="relative z-10 px-0 sm:px-4 lg:px-8 py-8">
         {/* Header Section */}
-        <div className="flex flex-col lg:flex-row justify-between  lg:items-center gap-4 mb-8">
+        <div className="flex flex-col lg:flex-row justify-between lg:items-center gap-4 mb-8">
           <div className="flex items-center gap-4">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full blur-md opacity-50 animate-pulse" />
@@ -125,7 +141,7 @@ export default function WelcomeDashboard() {
             <Button
               variant="outline"
               className="bg-[#1969fe] hover:bg-blue-700 text-white w-full flex hover:text-white rounded-[6px] shadow-lg shadow-blue-500/30"
-              onClick={() => navigate("/pastors-dashboard/profile")}
+              onClick={() => navigate(profileRoute)}
             >
               <User className="w-4 h-4 mr-2" />
               Profile

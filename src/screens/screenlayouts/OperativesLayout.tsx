@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +13,7 @@ import {
   HomeIcon,
   LayoutDashboard,
   FileQuestion,
+  SignpostBigIcon,
 } from "lucide-react";
 import { Link, useLocation, Outlet, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -53,7 +53,7 @@ interface LayoutProps {
   children?: React.ReactNode;
 }
 
-export default function AdhocStaffLayout({ children }: LayoutProps) {
+export default function OperativesLayout({ children }: LayoutProps) {
   const { user } = useSelector((state: RootState) => state.auth);
   const [logout] = useLogoutMutation();
   const dispatch = useDispatch();
@@ -66,7 +66,11 @@ export default function AdhocStaffLayout({ children }: LayoutProps) {
   const location = useLocation();
 
   // Notifications
-  const { data: notificationsData, refetch, isLoading } = useGetUserNotificationsQuery();
+  const {
+    data: notificationsData,
+    refetch,
+    isLoading,
+  } = useGetUserNotificationsQuery();
   const [acknowledge] = useAcknowledgeNotificationMutation();
 
   const notifications = notificationsData?.notifications || [];
@@ -77,16 +81,33 @@ export default function AdhocStaffLayout({ children }: LayoutProps) {
   }, []);
 
   const navItems = [
-    { icon: HomeIcon, label: "Home", href: "/dashboard" },
-    { icon: Calendar, label: "Events", href: "/dashboard/manage-schedule" },
-    { icon: UserCircle, label: "Meetings", href: "/dashboard/zoom-meetings" },
-    { icon: BellDot, label: "Notifications", href: "/dashboard/manage-notification" },
-        {
-          icon: FileQuestion,
-          label: "Queries",
-          href: "/dashboard/manage-queries",
-        },
-    { icon: UserRound, label: "My Profile", href: "/dashboard/profile" },
+    { icon: HomeIcon, label: "Home", href: "/dashboard-operatives" },
+    { icon: Calendar, label: "Events", href: "/dashboard-operatives/events" },
+    {
+      icon: UserCircle,
+      label: "Meetings",
+      href: "/dashboard-operatives/meeting-list",
+    },
+    {
+      icon: BellDot,
+      label: "Notifications",
+      href: "/dashboard-operatives/notifications",
+    },
+    {
+      icon: FileQuestion,
+      label: "Queries",
+      href: "/dashboard-operatives/queries",
+    },
+      {
+      icon: SignpostBigIcon,
+      label: "Posting",
+      href: "/dashboard-operatives/posting",
+    },
+    {
+      icon: UserRound,
+      label: "My Profile",
+      href: "/dashboard-operatives/profile",
+    },
   ];
 
   const handleLogout = async () => {
@@ -140,9 +161,13 @@ export default function AdhocStaffLayout({ children }: LayoutProps) {
       }`}
     >
       {/* Sidebar Header */}
-      <div className={`flex items-center h-16 px-4 border-b border-gray-200/50 ${sidebarCollapsed ? "justify-center" : "justify-between"}`}>
+      <div
+        className={`flex items-center h-16 px-4 border-b border-gray-200/50 ${
+          sidebarCollapsed ? "justify-center" : "justify-between"
+        }`}
+      >
         {!sidebarCollapsed && (
-          <Link to="/dashboard" className="flex items-center gap-2">
+          <Link to="/dashboard-operatives" className="flex items-center gap-2">
             <LayoutDashboard className="h-6 w-6 text-blue-600" />
             <span className="font-bold text-lg bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
               SMHOS HRM
@@ -187,7 +212,10 @@ export default function AdhocStaffLayout({ children }: LayoutProps) {
                         </div>
                       </Link>
                     </TooltipTrigger>
-                    <TooltipContent side="right" className="bg-gray-900 text-white">
+                    <TooltipContent
+                      side="right"
+                      className="bg-gray-900 text-white"
+                    >
                       {item.label}
                     </TooltipContent>
                   </Tooltip>
@@ -215,18 +243,24 @@ export default function AdhocStaffLayout({ children }: LayoutProps) {
       </nav>
 
       {/* User Profile */}
-      <div className={`p-3 border-t border-gray-200/50 ${sidebarCollapsed ? "text-center" : ""}`}>
+      <div
+        className={`p-3 border-t border-gray-200/50 ${
+          sidebarCollapsed ? "text-center" : ""
+        }`}
+      >
         {sidebarCollapsed ? (
           <Tooltip delayDuration={0}>
             <TooltipTrigger asChild>
               <div className="flex justify-center">
                 <Avatar
                   className="h-10 w-10 cursor-pointer ring-2 ring-white shadow-lg hover:ring-blue-200 transition-all"
-                  onClick={() => navigate("/dashboard/profile")}
+                  onClick={() => navigate("/dashboard-operatives/profile")}
                 >
                   <AvatarImage src={user?.user?.avatar?.url} alt="Profile" />
                   <AvatarFallback className="bg-gradient-to-br from-blue-600 to-blue-700 text-white">
-                    {user?.user?.firstName?.charAt(0) || <User className="h-5 w-5" />}
+                    {user?.user?.firstName?.charAt(0) || (
+                      <User className="h-5 w-5" />
+                    )}
                   </AvatarFallback>
                 </Avatar>
               </div>
@@ -238,12 +272,14 @@ export default function AdhocStaffLayout({ children }: LayoutProps) {
         ) : (
           <div
             className="flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-gray-50 transition-all"
-            onClick={() => navigate("/dashboard/profile")}
+            onClick={() => navigate("/dashboard-operatives/profile")}
           >
             <Avatar className="h-10 w-10 ring-2 ring-white shadow-lg">
               <AvatarImage src={user?.user?.avatar?.url} alt="Profile" />
               <AvatarFallback className="bg-gradient-to-br from-blue-600 to-blue-700 text-white">
-                {user?.user?.firstName?.charAt(0) || <User className="h-5 w-5" />}
+                {user?.user?.firstName?.charAt(0) || (
+                  <User className="h-5 w-5" />
+                )}
               </AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
@@ -276,7 +312,10 @@ export default function AdhocStaffLayout({ children }: LayoutProps) {
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b">
-            <Link to="/dashboard" className="flex items-center gap-2">
+            <Link
+              to="/dashboard-operatives"
+              className="flex items-center gap-2"
+            >
               <LayoutDashboard className="h-6 w-6 text-blue-600" />
               <span className="font-bold text-lg bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
                 SMHOS HRM
@@ -290,14 +329,18 @@ export default function AdhocStaffLayout({ children }: LayoutProps) {
               <Avatar className="h-12 w-12 ring-2 ring-white shadow-lg">
                 <AvatarImage src={user?.user?.avatar?.url} alt="Profile" />
                 <AvatarFallback className="bg-gradient-to-br from-blue-600 to-blue-700 text-white">
-                  {user?.user?.firstName?.charAt(0) || <User className="h-5 w-5" />}
+                  {user?.user?.firstName?.charAt(0) || (
+                    <User className="h-5 w-5" />
+                  )}
                 </AvatarFallback>
               </Avatar>
               <div>
                 <p className="font-semibold text-gray-900">
                   {user?.user?.firstName} {user?.user?.lastName}
                 </p>
-                <p className="text-sm text-gray-600 capitalize">{user?.user?.role}</p>
+                <p className="text-sm text-gray-600 capitalize">
+                  {user?.user?.role}
+                </p>
               </div>
             </div>
           </div>
@@ -320,7 +363,9 @@ export default function AdhocStaffLayout({ children }: LayoutProps) {
                         }`}
                       >
                         <Icon className="h-5 w-5" />
-                        <span className="text-sm font-medium">{item.label}</span>
+                        <span className="text-sm font-medium">
+                          {item.label}
+                        </span>
                         {isActive && (
                           <div className="ml-auto w-1.5 h-1.5 bg-blue-600 rounded-full" />
                         )}
@@ -365,12 +410,17 @@ export default function AdhocStaffLayout({ children }: LayoutProps) {
 
                 {/* Page Title */}
                 <h1 className="text-lg sm:text-xl font-semibold text-gray-800">
-                  {navItems.find((item) => item.href === location.pathname)?.label || 
-                   (location.pathname.includes("meeting-list") ? "Meetings" :
-                    location.pathname.includes("events") ? "Events" :
-                    location.pathname.includes("notifications") ? "Notifications" :
-                    location.pathname.includes("profile") ? "My Profile" :
-                    "Dashboard")}
+                  {navItems.find((item) => item.href === location.pathname)
+                    ?.label ||
+                    (location.pathname.includes("meeting-list")
+                      ? "Meetings"
+                      : location.pathname.includes("events")
+                      ? "Events"
+                      : location.pathname.includes("notifications")
+                      ? "Notifications"
+                      : location.pathname.includes("profile")
+                      ? "My Profile"
+                      : "Dashboard")}
                 </h1>
               </div>
 
@@ -401,7 +451,10 @@ export default function AdhocStaffLayout({ children }: LayoutProps) {
                         {user?.user?.firstName}
                       </span>
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src={user?.user?.avatar?.url} alt="Profile" />
+                        <AvatarImage
+                          src={user?.user?.avatar?.url}
+                          alt="Profile"
+                        />
                         <AvatarFallback className="bg-gradient-to-br from-blue-600 to-blue-700 text-white text-sm">
                           {user?.user?.firstName?.charAt(0)}
                         </AvatarFallback>
@@ -409,7 +462,7 @@ export default function AdhocStaffLayout({ children }: LayoutProps) {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-48 bg-white">
-                    <Link to="/dashboard/profile">
+                    <Link to="/dashboard-operatives/profile">
                       <DropdownMenuItem className="cursor-pointer">
                         <User className="mr-2 h-4 w-4" />
                         <span>Profile</span>
@@ -440,7 +493,10 @@ export default function AdhocStaffLayout({ children }: LayoutProps) {
       </div>
 
       {/* Notification Modal */}
-      <Dialog open={notificationModalOpen} onOpenChange={setNotificationModalOpen}>
+      <Dialog
+        open={notificationModalOpen}
+        onOpenChange={setNotificationModalOpen}
+      >
         <DialogContent className="sm:max-w-[500px] rounded-lg max-h-[90vh] overflow-hidden bg-white">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-xl">
@@ -521,7 +577,3 @@ export default function AdhocStaffLayout({ children }: LayoutProps) {
     </TooltipProvider>
   );
 }
-
-
-
-

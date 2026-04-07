@@ -28,6 +28,8 @@ const roleOptions = [
   { value: "admin staff", label: "Admin Staff" },
   { value: "operatives", label: "Operatives" },
   { value: "adhoc", label: "Adhoc" },
+  { value: "operative admin", label: "Operative Admin" },
+
 ];
 
 const departmentOptions = [

@@ -1,4 +1,3 @@
-
 // export default IsNotLoginAuth;
 import React from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
@@ -28,18 +27,14 @@ const IsNotLoginAuth: React.FC = () => {
     redirectPath = "/dashboard";
   } else if (user?.user?.role === "admin staff") {
     redirectPath = "/dashboard-hr-admin";
-  }  else if (user?.user?.role === "operatives") {
+  } else if (user?.user?.role === "operatives") {
     redirectPath = "/dashboard-operatives";
-  }  else if (user?.user?.role === "adhoc") {
+  } else if (user?.user?.role === "adhoc") {
     redirectPath = "/dashboard-adhoc";
+  } else if (user?.user?.role === "operative admin") {
+    redirectPath = "/dashboard-admin-posting";
   }
-  return (
-    <Navigate
-      to={redirectPath}
-      state={{ from: location }}
-      replace
-    />
-  );
+  return <Navigate to={redirectPath} state={{ from: location }} replace />;
 };
 
 export default IsNotLoginAuth;
